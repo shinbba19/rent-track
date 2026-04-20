@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { supabase, DbPortfolioItem, DbUnit, DbTenant } from "@/lib/supabase";
 import { formatCurrency } from "@/lib/mockData";
@@ -19,7 +19,7 @@ const nameToPropertyId: Record<string, string> = {
   "ทิวเขา":          "tiwkao",
 };
 
-export default function UnitsPage() {
+function UnitsContent() {
   const searchParams = useSearchParams();
   const [filterProperty, setFilterProperty] = useState(searchParams.get("property") ?? "all");
   const [portfolio, setPortfolio] = useState<DbPortfolioItem[]>([]);
@@ -124,5 +124,13 @@ export default function UnitsPage() {
         </table>
       </div>
     </div>
+  );
+}
+
+export default function UnitsPage() {
+  return (
+    <Suspense fallback={<div className="p-6 text-slate-400">Loading…</div>}>
+      <UnitsContent />
+    </Suspense>
   );
 }
