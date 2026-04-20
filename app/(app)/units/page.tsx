@@ -82,6 +82,7 @@ function UnitsContent() {
       </div>
 
       <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+        <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead className="bg-slate-50 border-b border-slate-100">
             <tr className="text-xs text-slate-400 uppercase">
@@ -122,6 +123,7 @@ function UnitsContent() {
             )}
           </tbody>
         </table>
+        </div>
       </div>
     </div>
   );

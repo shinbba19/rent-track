@@ -78,6 +78,7 @@ export default function TaxPage() {
           Building &amp; Condo Tax (ภาษีที่ดิน บ้านและคอนโด)
         </h2>
         <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+          <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead className="bg-slate-50 border-b border-slate-100">
               <tr className="text-xs text-slate-400 uppercase">
@@ -120,6 +121,7 @@ export default function TaxPage() {
               )}
             </tbody>
           </table>
+          </div>
         </div>
       </div>
 
@@ -129,6 +131,7 @@ export default function TaxPage() {
           Land Tax (ภาษีที่ดิน)
         </h2>
         <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+          <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead className="bg-slate-50 border-b border-slate-100">
               <tr className="text-xs text-slate-400 uppercase">
@@ -171,6 +174,7 @@ export default function TaxPage() {
               )}
             </tbody>
           </table>
+          </div>
         </div>
       </div>
     </div>
