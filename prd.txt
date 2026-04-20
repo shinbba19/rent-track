@@ -1,0 +1,190 @@
+PROJECT: Condo Owner Rent Monitoring Dashboard
+
+OVERVIEW:
+A dashboard for condo owners to monitor rental income, tenant status, and payment performance across their units. This is NOT a payment system. It is for tracking, visibility, and decision-making.
+
+OBJECTIVE:
+Enable property owners to quickly see:
+- Which units are generating income
+- Which tenants have paid / not paid
+- Overall cashflow performance
+
+TARGET USERS:
+1. Property Owner (primary)
+2. Asset Manager / Investor (secondary)
+
+TECH STACK:
+Frontend: Next.js (App Router), TailwindCSS
+Backend: Next.js API Routes
+Database: PostgreSQL (dev: SQLite)
+ORM: Prisma
+Auth: NextAuth / JWT
+Deployment: Vercel
+
+CORE FEATURES:
+
+1. AUTHENTICATION
+- Login / Logout
+- Role: owner
+
+2. PROPERTY & UNIT VIEW
+- View all properties
+- View all units under each property
+- See rent price per unit
+
+3. TENANT VIEW
+- View tenant per unit
+- Contract period
+- Rent amount
+
+4. PAYMENT TRACKING (MANUAL INPUT)
+- Monthly rent record
+- Owner manually updates:
+  - amount_paid
+  - payment_date
+- System auto-calculates status:
+  - paid
+  - pending
+  - late
+
+5. DASHBOARD (CORE FEATURE)
+
+KPIs:
+- Total Expected Rent (monthly)
+- Total Collected
+- Outstanding Amount
+- Late Units Count
+
+Views:
+- Per property
+- Per unit
+- Monthly trend
+
+6. REPORTING
+- Monthly rent summary
+- Export CSV (optional)
+
+DATABASE SCHEMA (PRISMA):
+
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  role      String
+  properties Property[]
+}
+
+model Property {
+  id        String   @id @default(uuid())
+  name      String
+  location  String
+  ownerId   String
+  owner     User     @relation(fields: [ownerId], references: [id])
+  units     Unit[]
+}
+
+model Unit {
+  id          String   @id @default(uuid())
+  propertyId  String
+  unitNumber  String
+  rentPrice   Float
+  property    Property @relation(fields: [propertyId], references: [id])
+  tenant      Tenant?
+}
+
+model Tenant {
+  id             String   @id @default(uuid())
+  name           String
+  phone          String
+  unitId         String   @unique
+  contractStart  DateTime
+  contractEnd    DateTime
+  unit           Unit     @relation(fields: [unitId], references: [id])
+  payments       Payment[]
+}
+
+model Payment {
+  id           String   @id @default(uuid())
+  tenantId     String
+  month        String
+  amountDue    Float
+  amountPaid   Float    @default(0)
+  paymentDate  DateTime?
+  status       String   // paid, pending, late
+  tenant       Tenant   @relation(fields: [tenantId], references: [id])
+}
+
+CORE LOGIC:
+
+Payment Status:
+IF amountPaid >= amountDue → "paid"
+ELSE IF today > due_date → "late"
+ELSE → "pending"
+
+(No auto payment, no gateway, no collection logic)
+
+API ENDPOINTS:
+
+GET /api/properties
+GET /api/units
+GET /api/tenants
+GET /api/payments
+
+POST /api/payments (manual update)
+PUT /api/payments/:id (update payment)
+
+FRONTEND STRUCTURE:
+
+/app/dashboard
+/app/properties
+/app/units
+/app/tenants
+/app/payments
+/app/login
+
+UI COMPONENTS:
+- Sidebar
+- KPI Cards
+- Property Table
+- Unit Table
+- Payment Table
+- Filter (by month / property)
+
+DASHBOARD DESIGN:
+
+Top:
+- Total Expected Rent
+- Collected
+- Outstanding
+- Late %
+
+Middle:
+- Bar chart (monthly income)
+- Table of late units
+
+Bottom:
+- Unit-level breakdown
+
+FUTURE FEATURES:
+
+- LINE alert for late tenant
+- AI cashflow forecast
+- Portfolio yield dashboard
+- Integration with rent-to-own model
+- Link to COAST token (income tracking)
+
+BUSINESS MODEL:
+
+- Freemium (up to 5 units free)
+- Paid: 99 THB/unit/month
+
+POSITIONING:
+
+This is NOT:
+❌ Rent collection app
+
+This IS:
+✅ Owner Financial Visibility Tool
+✅ Real Estate Portfolio Dashboard
+
+END
